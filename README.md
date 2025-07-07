@@ -64,7 +64,7 @@ We believe in the value of handcrafted work and in generating income through art
 
 1. Clone this repository:
 ```bash
-git clone https://github.com/your-username/fazendo-arte.git
+git clone https://github.com/PedroHenriquee777/fazendo-arte.git
 ````
 
 2. Import the MySQL database:
