@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Análises</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    :root {
+      --primary: #f75c03;
+      --secondary: #ff8c42;
+      --text-light: #fff;
+      --text-dark: #333;
+      --bg-light: #f5f5f5;
+      --bg-dark: #1e1e1e;
+      --card-light: #fafafa;
+      --card-dark: #2a2a2a;
+      --border-dark: #444;
+      --border-light: #ddd;
+      --link-light: #f75c03;
+      --link-dark: #ffa64d;
+    }
+
+    body {
+      background: var(--bg-light);
+      color: var(--text-dark);
+    }
+
+    body.dark-mode {
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+    }
+
+    header {
+      background: linear-gradient(90deg, #ff7d3d, #ff9900);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header h1 {
+      color: white;
+      font-size: 28px;
+    }
+
+    .dark-toggle {
+      background: white;
+      color: var(--primary);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.dark-mode .dark-toggle {
+      background: #333;
+      color: var(--text-light);
+    }
+
+    .burger {
+      color: white;
+      position: relative;
+      width: 40px;
+      height: 30px;
+      background: transparent;
+      cursor: pointer;
+      display: block;
+      z-index: 1001;
+    }
+
+    .burger input {
+      display: none;
+    }
+
+    .burger span {
+      display: block;
+      position: absolute;
+      height: 4px;
+      width: 100%;
+      background: white;
+      border-radius: 9px;
+      left: 0;
+      transform: rotate(0deg);
+      transition: .25s ease-in-out;
+    }
+
+    .burger span:nth-of-type(1) {
+      top: 0;
+    }
+
+    .burger span:nth-of-type(2) {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .burger span:nth-of-type(3) {
+      top: 100%;
+      transform: translateY(-100%);
+    }
+
+    .burger input:checked ~ span:nth-of-type(1) {
+      transform: rotate(45deg);
+      top: 8px;
+    }
+
+    .burger input:checked ~ span:nth-of-type(2) {
+      opacity: 0;
+    }
+
+    .burger input:checked ~ span:nth-of-type(3) {
+      transform: rotate(-45deg);
+      top: 8px;
+    }
+
+    .menu {
+      position: fixed;
+      top: 0;
+      right: -250px;
+      width: 250px;
+      height: 100vh;
+      background: var(--bg-light);
+      box-shadow: -2px 0 8px rgba(0,0,0,0.2);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: right 0.3s ease, background-color 0.3s;
+      z-index: 1000;
+      color: var(--text-dark);
+    }
+
+    body.dark-mode .menu {
+      background: var(--bg-dark);
+      color: var(--text-light);
+      box-shadow: none;
+    }
+
+    .menu.open {
+      right: 0;
+    }
+
+    .menu h2 {
+      color: var(--primary);
+      font-size: 20px;
+    }
+
+    .menu a {
+      text-decoration: none;
+      color: inherit;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+      transition: border-color 0.3s, color 0.3s;
+    }
+
+    body.dark-mode .menu a {
+      border-bottom-color: #555;
+    }
+
+    .menu a:hover {
+      color: var(--secondary);
+    }
+
+    .container {
+      padding: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .filters {
+      margin-bottom: 24px;
+    }
+
+    .filters select {
+      padding: 8px 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text-dark);
+      transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    }
+
+    body.dark-mode .filters select {
+      background: #333;
+      color: var(--text-light);
+      border-color: var(--border-dark);
+    }
+
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .card-main {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      transition: background-color 0.3s, box-shadow 0.3s, color 0.3s;
+      color: var(--text-dark);
+    }
+
+    body.dark-mode .card-main {
+      background: var(--card-dark);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.7);
+      color: var(--text-light);
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      transition: background-color 0.3s, box-shadow 0.3s, color 0.3s;
+      color: var(--text-dark);
+      border: 1px solid transparent;
+    }
+
+    body.dark-mode .card {
+      background: var(--card-dark);
+      border-color: var(--border-dark);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.7);
+      color: var(--text-light);
+    }
+
+    .card h2 {
+      font-size: 18px;
+      margin-bottom: 16px;
+    }
+
+    .summary {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .summary-item {
+      flex: 1;
+      background: #fafafa;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 150px;
+      color: var(--text-dark);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.dark-mode .summary-item {
+      background: #3a3a3a;
+      color: var(--text-light);
+    }
+
+    .summary-item span {
+      display: block;
+      font-weight: 600;
+    }
+
+    canvas {
+      width: 100% !important;
+      max-height: 300px;
+    }
+
+    .details-table {
+      width: 100%;
+      border-collapse: collapse;
+      color: var(--text-dark);
+      transition: color 0.3s;
+    }
+
+    body.dark-mode .details-table {
+      color: var(--text-light);
+    }
+
+    .details-table th, .details-table td {
+      text-align: left;
+      padding: 8px;
+      border-bottom: 1px solid #eee;
+      transition: border-color 0.3s;
+    }
+
+    body.dark-mode .details-table th, 
+    body.dark-mode .details-table td {
+      border-bottom-color: #555;
+    }
+
+    .progress-circle {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .progress-circle svg {
+      transform: rotate(-90deg);
+    }
+
+    .progress-circle .percent {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--text-dark);
+      transition: color 0.3s;
+    }
+
+    body.dark-mode .progress-circle .percent {
+      color: var(--text-light);
+    }
+
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 12px;
+      font-size: 14px;
+      color: var(--text-dark);
+      transition: color 0.3s;
+    }
+
+    body.dark-mode .legend {
+      color: var(--text-light);
+    }
+
+    .legend div {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dot.orange { background-color: #fca311; }
+    .dot.gray { background-color: #ccc; }
+
+    body.dark-mode .dot.orange {
+      background-color: #ffb84d;
+    }
+    body.dark-mode .dot.gray {
+      background-color: #666;
+    }
+
+    footer {
+      background: #eee;
+      padding: 1rem;
+      text-align: center;
+      font-size: 0.9rem;
+      margin-top: 40px;
+      color: #1e1e1e;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.dark-mode footer {
+      background: #222;
+      color: var(--text-light);
+    }
+
+    footer a {
+      margin: 0 0.5rem;
+      color: var(--link-light);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    body.dark-mode footer a {
+      color: var(--link-dark);
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (min-width: 768px) {
+      .cards {
+        flex-direction: column;
+      }
+      .cards > .card-main {
+        order: 1;
+      }
+      .cards .small-cards {
+        display: flex;
+        gap: 24px;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+      .small-cards .card {
+        flex: 1;
+        min-width: 280px;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .card-main {
+        padding: 24px;
+      }
+      .summary {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <label class="burger">
+      <input type="checkbox" id="menu-toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </label>
+    <h1>Análises</h1>
+  </header>
+
+  <div class="menu" id="side-menu">
+    <h2>Menu</h2>
+    <a href="dashboard.html">Início</a>
+    <a href="mensagens.html">Mensagens</a>
+    <a href="config.html">Configurações</a>
+    <button class="dark-toggle" onclick="toggleDarkMode()">🌙</button>
+  </div>
+
+  <div class="container">
+    <div class="filters">
+      <select>
+        <option>Período: Últimos 7 dias</option>
+        <option>Últimos 30 dias</option>
+        <option>Este mês</option>
+      </select>
+    </div>
+
+    <div class="cards">
+      <div class="card-main">
+        <h2>Resumo de Mensagens</h2>
+        <div class="summary">
+          <div class="summary-item">📩 <div><span>120</span> Mensagens recebidas</div></div>
+          <div class="summary-item">📨 <div><span>85</span> Mensagens enviadas</div></div>
+          <div class="summary-item">⏱️ <div><span>1,2 h</span> Tempo médio</div></div>
+        </div>
+        <canvas id="chart"></canvas>
+      </div>
+
+      <div class="small-cards">
+        <div class="card">
+          <h2>Mensagens lidas e não lidas</h2>
+          <div class="progress-circle">
+            <svg width="100" height="100">
+              <circle cx="50" cy="50" r="45" stroke="#eee" stroke-width="10" fill="none"/>
+              <circle cx="50" cy="50" r="45" stroke="#fca311" stroke-width="10" fill="none"
+                stroke-dasharray="282.743" stroke-dashoffset="99"/>
+            </svg>
+            <div class="percent">65%</div>
+          </div>
+          <div class="legend">
+            <div><div class="dot orange"></div>Não lidas</div>
+            <div><div class="dot gray"></div>Lidas</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Mensagens Detalhes</h2>
+          <table class="details-table">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Tipo</th>
+                <th>Remetente</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>21/04/2024</td><td>Mensagem</td><td>Cliente A</td><td>Respondida</td></tr>
+              <tr><td>20/04/2024</td><td>Mensagem</td><td>Cliente B</td><td>Não lida</td></tr>
+              <tr><td>19/04/2024</td><td>Notificação</td><td>Cliente C</td><td>Respondida</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>
+        Copyright © 2025 Fazendo Arte.
+        <a href="#">Termos e condições</a> |
+        <a href="#">Sobre nós</a> |
+        <a href="#">Contato</a>
+    </p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const ctx = document.getElementById('chart').getContext('2d');
+
+    let chartColors = {
+      recebidasBorder: '#3b82f6',
+      recebidasBackground: 'rgba(59, 130, 246, 0.2)',
+      enviadasBorder: '#facc15',
+      enviadasBackground: 'rgba(234, 179, 8, 0.2)'
+    };
+
+    function createChart(colors) {
+      return new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+          datasets: [
+            {
+              label: 'Recebidas',
+              data: [5, 10, 15, 30, 20, 35, 25],
+              borderColor: colors.recebidasBorder,
+              backgroundColor: colors.recebidasBackground,
+              tension: 0.4
+            },
+            {
+              label: 'Enviadas',
+              data: [2, 5, 7, 10, 8, 15, 9],
+              borderColor: colors.enviadasBorder,
+              backgroundColor: colors.enviadasBackground,
+              tension: 0.4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: true,
+              labels: {
+                color: document.body.classList.contains('dark-mode') ? '#fff' : '#000'
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                color: document.body.classList.contains('dark-mode') ? '#fff' : '#000'
+              },
+              grid: {
+                color: document.body.classList.contains('dark-mode') ? '#555' : '#ddd'
+              }
+            },
+            x: {
+              ticks: {
+                color: document.body.classList.contains('dark-mode') ? '#fff' : '#000'
+              },
+              grid: {
+                color: document.body.classList.contains('dark-mode') ? '#555' : '#ddd'
+              }
+            }
+          }
+        }
+      });
+    }
+
+    let chart = createChart(chartColors);
+
+    function updateChartColors(isDark) {
+      chart.destroy();
+
+      if(isDark){
+        chartColors = {
+          recebidasBorder: '#7aa9ff',
+          recebidasBackground: 'rgba(122, 169, 255, 0.3)',
+          enviadasBorder: '#fff07a',
+          enviadasBackground: 'rgba(255, 240, 122, 0.3)'
+        };
+      } else {
+        chartColors = {
+          recebidasBorder: '#3b82f6',
+          recebidasBackground: 'rgba(59, 130, 246, 0.2)',
+          enviadasBorder: '#facc15',
+          enviadasBackground: 'rgba(234, 179, 8, 0.2)'
+        };
+      }
+
+      chart = createChart(chartColors);
+    }
+
+    function toggleDarkMode() {
+      const body = document.body;
+      body.classList.toggle('dark-mode');
+      updateChartColors(body.classList.contains('dark-mode'));
+
+      // Atualiza texto do botão
+      const btn = document.querySelector('.dark-toggle');
+      if(body.classList.contains('dark-mode')){
+        btn.textContent = '☀️';
+      } else {
+        btn.textContent = '🌙';
+      }
+    }
+
+    const menuToggle = document.getElementById('menu-toggle');
+    const sideMenu = document.getElementById('side-menu');
+
+    menuToggle.addEventListener('change', () => {
+      if(menuToggle.checked) {
+        sideMenu.classList.add('open');
+      } else {
+        sideMenu.classList.remove('open');
+      }
+    });
+  </script>
+</body>
+</html>

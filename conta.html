@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    :root {
+      --primary: #f75c03;
+      --secondary: #ff8c42;
+      --text-dark: #333;
+      --text-light: #fff;
+      --bg: #f5f5f5;
+      --card: #fff;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text-dark);
+    }
+    header {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      padding: 20px;
+      text-align: center;
+    }
+    header h1 {
+      color: white;
+    }
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    button {
+      background: var(--primary);
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #d94e00;
+    }
+  </style>
+</head>
+<body>
+    
+     <header>
+    <h1>Cadastro de Vendedor</h1>
+  </header>
+
+     <div class="container">
+    <form action="cadastrar.php" method="post">
+        <h2>Dados Pessoais</h2>
+      <label for="nome">Nome Completo</label>
+      <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="seuemail@exemplo.com" required>
+
+      <label for="telefone">Telefone</label>
+      <input type="tel" id="telefone" name="telefone" placeholder="(11) 99999-9999" required>
+
+      <label for="senha">Senha</label>
+      <input type="password" id="senha" name="senha" placeholder="Crie uma senha segura" required>
+
+      <h2>Dados da Loja</h2>
+      <label for="nome_loja">Nome da Loja</label>
+      <input type="text" id="nome_loja" name="nome_loja" placeholder="Nome da sua loja" required>
+
+      <label for="descricao_loja">Descrição da Loja</label>
+      <input type="text" id="descricao_loja" name="descricao_loja" placeholder="Breve descrição sobre a loja" required>
+
+      <label for="endereco_loja">Endereço Comercial</label>
+      <input type="text" id="endereco_loja" name="endereco_loja" placeholder="Endereço completo da loja" required>
+
+      <h2>Dados Bancários</h2>
+      <label for="banco">Banco</label>
+      <input type="text" id="banco" name="banco" placeholder="Nome do banco" required>
+
+      <label for="agencia">Agência</label>
+      <input type="text" id="agencia" name="agencia" placeholder="Número da agência" required>
+
+      <label for="conta">Conta</label>
+      <input type="text" id="conta" name="conta" placeholder="Número da conta" required>
+
+      <label for="tipo_conta">Tipo de Conta</label>
+      <select id="tipo_conta" name="tipo_conta" required>
+        <option value="">Selecione</option>
+        <option value="corrente">Corrente</option>
+        <option value="poupanca">Poupança</option>
+        <option value="pagamento">Pagamento</option>
+      </select>
+
+      <button type="submit">Cadastrar</button>
+    </form>
+    </div>
+</body>
+</html>

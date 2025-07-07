@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="pt-Br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meus Produtos</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /*Variáveis de cores*/
+      :root {
+        --primary: #f75c03;
+        --secondary: #ff8c42;
+        --text-light: #fff;
+        --text-dark: #333;
+        --bg-light: #f5f5f5;
+        --bg-dark: #1e1e1e;
+        --card-light: #fafafa;
+        --card-dark: #2a2a2a;
+        --border-dark: #444;
+      }
+
+      /* Reset e padrão da fonte */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", sans-serif;
+        transition: all 0.3s ease;
+      }
+
+      /* Estilo do body em modo claro */
+      body {
+        background: var(--bg-light);
+        color: var(--text-dark);
+      }
+
+      /* Estilo do body em modo escuro */
+      body.dark-mode {
+        background-color: var(--bg-dark);
+        color: var(--text-light);
+      }
+
+      /* HEADER */
+      header {
+        background: linear-gradient(90deg, #ff7d3d, #ff9900);
+        padding: 16px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      header img {
+        height: 70px;
+        width: 80px; /* Logo do topo */
+      }
+
+      .dark-toggle {
+        background: white;
+        color: var(--primary);
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      /* Botão no modo escuro */
+      body.dark-mode .dark-toggle {
+        background: #333;
+        color: white;
+      }
+
+      /* TRÊS BARRAS */
+      .burger {
+        position: relative;
+        width: 40px;
+        height: 30px;
+        background: transparent;
+        cursor: pointer;
+        display: block;
+        z-index: 1001;
+      }
+
+      .burger input {
+        display: none;
+        /* Esconde o checkbox */
+      }
+
+      /* Define posições das linhas do ícone */
+      .burger span {
+        display: block;
+        position: absolute;
+        height: 4px;
+        width: 100%;
+        background: white;
+        border-radius: 9px;
+        left: 0;
+        transform: rotate(0deg);
+        transition: 0.25s ease-in-out;
+      }
+
+      .burger span:nth-of-type(1) {
+        top: 0;
+      }
+
+      .burger span:nth-of-type(2) {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .burger span:nth-of-type(3) {
+        top: 100%;
+        transform: translateY(-100%);
+      }
+
+      /* Animação do X ao abrir menu */
+      .burger input:checked ~ span:nth-of-type(1) {
+        transform: rotate(45deg);
+        top: 8px;
+      }
+
+      .burger input:checked ~ span:nth-of-type(2) {
+        opacity: 0;
+      }
+
+      .burger input:checked ~ span:nth-of-type(3) {
+        transform: rotate(-45deg);
+        top: 8px;
+      }
+
+      /* MENU LATERAL */
+      .menu {
+        position: fixed;
+        top: 0;
+        right: -250px;
+        width: 250px;
+        height: 100vh;
+        background: white;
+        box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        transition: right 0.3s ease;
+        z-index: 1000;
+      }
+
+      /* Modo escuro no menu */
+      body.dark-mode .menu {
+        background: var(--bg-dark);
+      }
+
+      /* Quando o menu está aberto */
+      .menu.open {
+        right: 0;
+      }
+
+      .menu h2 {
+        color: var(--primary);
+        font-size: 20px;
+      }
+
+      .menu a {
+        text-decoration: none;
+        color: inherit;
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+      }
+
+      body.dark-mode .menu a,
+      body.dark-mode .menu h2 {
+        color: var(--text-light);
+      }
+
+      /* CONTAINER DOS PRODUTOS */
+      .produtos-container {
+        max-width: 1100px;
+        margin: 40px auto;
+        padding: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+      }
+
+      /* CARDS DOS PRODUTOS */
+      .card-produto {
+        background: var(--card-light);
+        border-radius: 8px;
+        padding: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      }
+
+      body.dark-mode .card-produto {
+        background: var(--card-dark);
+        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
+      }
+
+      .card-produto h3 {
+        color: var(--primary);
+        margin-bottom: 10px;
+      }
+
+      .card-produto p {
+        margin-bottom: 6px;
+        font-size: 0.95rem;
+      }
+
+      .card-actions {
+        margin-top: 10px;
+        display: flex;
+        gap: 10px;
+      }
+
+      .btn {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 0.85rem;
+      }
+
+      .btn-editar {
+        background: var(--primary);
+        color: white;
+      }
+
+      .btn-excluir {
+        background: crimson;
+        color: white;
+      }
+
+      /* RODAPÉ (FOOTER) */
+      footer {
+        margin-top: 30px;
+        background: #eee;
+        padding: 1rem;
+        text-align: center;
+        font-size: 0.9rem;
+      }
+
+      body.dark-mode footer {
+        background: #333;
+      }
+
+      footer a {
+        margin: 0 0.5rem;
+        color: var(--primary);
+        text-decoration: none;
+      }
+
+      footer a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Cabeçalho com logo e três barrinhas -->
+    <header>
+      <label class="burger">
+        <input type="checkbox" id="menu-toggle" />
+        <span></span>
+        <span></span>
+        <span></span>
+      </label>
+      <a href="dashboard.html">
+        <img src="./imagens/logofzar.png" alt="Fazendo Arte" />
+      </a>
+    </header>
+
+    <!-- Menu lateral que aparece ao clicar nas três barrinhas -->
+    <div class="menu" id="side-menu">
+      <h2>Menu</h2>
+      <a href="dashboard.html">Início</a>
+      <a href="mensagens.html">Mensagens</a>
+      <a href="notific.html">Notificações</a>
+      <a href="config.html">Configurações</a>
+      <button class="dark-toggle" onclick="toggleDarkMode()">🌙</button>
+    </div>
+
+    <!-- Área principal com os cards dos produtos, com Título, Descrição, Preço, Estoque e Botôes funcionais -->
+    <main class="produtos-container">
+      <div class="card-produto">
+        <h3>Tapete Mandala</h3>
+        <p><strong>Descrição:</strong> Crochê em tons terrosos, estilo boho.</p>
+        <p><strong>Preço:</strong> R$ 75,00</p>
+        <p><strong>Estoque:</strong> 8</p>
+        <div class="card-actions">
+          <button class="btn btn-editar" onclick="editarProduto()">
+            Editar
+          </button>
+          <button class="btn btn-excluir" onclick="excluirProduto(this)">
+            Excluir
+          </button>
+        </div>
+      </div>
+
+      <div class="card-produto">
+        <h3>Capa de Almofada Trançada</h3>
+        <p><strong>Descrição:</strong> Lã grossa artesanal para decoração.</p>
+        <p><strong>Preço:</strong> R$ 40,00</p>
+        <p><strong>Estoque:</strong> 15</p>
+        <div class="card-actions">
+          <button class="btn btn-editar" onclick="editarProduto()">
+            Editar
+          </button>
+          <button class="btn btn-excluir" onclick="excluirProduto(this)">
+            Excluir
+          </button>
+        </div>
+      </div>
+
+      <div class="card-produto">
+        <h3>Bolsa de Crochê Rústica</h3>
+        <p><strong>Descrição:</strong> Alça de couro com crochê cru.</p>
+        <p><strong>Preço:</strong> R$ 95,00</p>
+        <p><strong>Estoque:</strong> 6</p>
+        <div class="card-actions">
+          <button class="btn btn-editar" onclick="editarProduto()">
+            Editar
+          </button>
+          <button class="btn btn-excluir" onclick="excluirProduto(this)">
+            Excluir
+          </button>
+        </div>
+      </div>
+
+      <div class="card-produto">
+        <h3>Kit Sousplat Floral</h3>
+        <p><strong>Descrição:</strong> 4 peças com bordado floral.</p>
+        <p><strong>Preço:</strong> R$ 60,00</p>
+        <p><strong>Estoque:</strong> 10</p>
+        <div class="card-actions">
+          <button class="btn btn-editar" onclick="editarProduto()">
+            Editar
+          </button>
+          <button class="btn btn-excluir" onclick="excluirProduto(this)">
+            Excluir
+          </button>
+        </div>
+      </div>
+
+      <div class="card-produto">
+        <h3>Colar de Madeira e Resina</h3>
+        <p><strong>Descrição:</strong> Leve, natural e sustentável</p>
+        <p><strong>Preço:</strong> R$ 35,00</p>
+        <p><strong>Estoque:</strong> 22</p>
+        <div class="card-actions">
+          <button class="btn btn-editar" onclick="editarProduto()">
+            Editar
+          </button>
+          <button class="btn btn-excluir" onclick="excluirProduto(this)">
+            Excluir
+          </button>
+        </div>
+      </div>
+
+      <div class="card-produto">
+        <h3>Cesta de Barbante</h3>
+        <p><strong>Descrição:</strong> Ideal para organizar objetos.</p>
+        <p><strong>Preço:</strong> R$ 28,00</p>
+        <p><strong>Estoque:</strong> 18</p>
+        <div class="card-actions">
+          <button class="btn btn-editar" onclick="editarProduto()">
+            Editar
+          </button>
+          <button class="btn btn-excluir" onclick="excluirProduto(this)">
+            Excluir
+          </button>
+        </div>
+      </div>
+
+      <div class="card-produto">
+        <h3>Pano de Prato Pintado</h3>
+        <p><strong>Descrição:</strong> Pintura de frutas tropicais..</p>
+        <p><strong>Preço:</strong> R$ 18,00</p>
+        <p><strong>Estoque:</strong> 30</p>
+        <div class="card-actions">
+          <button class="btn btn-editar" onclick="editarProduto()">
+            Editar
+          </button>
+          <button class="btn btn-excluir" onclick="excluirProduto(this)">
+            Excluir
+          </button>
+        </div>
+      </div>
+
+      <div class="card-produto">
+        <h3>Cachecol Inverno Mesclado</h3>
+        <p><strong>Descrição:</strong> Lã antialérgica, leve e macio.</p>
+        <p><strong>Preço:</strong>R$ 50,00</p>
+        <p><strong>Estoque:</strong> 12</p>
+        <div class="card-actions">
+          <button class="btn btn-editar" onclick="editarProduto()">
+            Editar
+          </button>
+          <button class="btn btn-excluir" onclick="excluirProduto(this)">
+            Excluir
+          </button>
+        </div>
+      </div>
+
+      <div class="card-produto">
+        <h3>Porta-velas de Cimento</h3>
+        <p><strong>Descrição:</strong> Estilo minimalista moderno.</p>
+        <p><strong>Preço:</strong> R$ 20,00</p>
+        <p><strong>Estoque:</strong> 14</p>
+        <div class="card-actions">
+          <button class="btn btn-editar" onclick="editarProduto()">
+            Editar
+          </button>
+          <button class="btn btn-excluir" onclick="excluirProduto(this)">
+            Excluir
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Rodapé do Site (FOOTER) -->
+    <footer>
+      <p>
+        Copyright © 2025 Fazendo Arte.
+        <a href="#">Termos e condições</a> | <a href="#">Sobre nós</a> |
+        <a href="#">Contato</a>
+      </p>
+    </footer>
+
+    <script>
+      // Alterna o modo escuro e salva no localStorage
+      function toggleDarkMode() {
+        document.body.classList.toggle("dark-mode");
+        const isDark = document.body.classList.contains("dark-mode");
+        localStorage.setItem("modo-escuro", isDark ? "true" : "false");
+        // Altera ícone do botão
+        document.querySelectorAll(".dark-toggle").forEach((btn) => {
+          btn.innerHTML = isDark ? "☀️" : "🌙";
+        });
+      }
+
+      // Redireciona para página de edição
+      function editarProduto() {
+        window.location.href = "novoProduto.html";
+      }
+
+      // Remove o produto da tela após confirmação
+      function excluirProduto(botao) {
+        const card = botao.closest(".card-produto");
+        if (confirm("Tem certeza que deseja excluir este produto?")) {
+          card.remove();
+        }
+      }
+
+      // Ao carregar a página
+      window.onload = function () {
+        // Aplica modo escuro se estava ativo antes
+        const isDark = localStorage.getItem("modo-escuro") === "true";
+        if (isDark) {
+          document.body.classList.add("dark-mode");
+          document.querySelectorAll(".dark-toggle").forEach((btn) => {
+            btn.innerHTML = "☀️";
+          });
+        }
+
+        // Controla a abertura do menu lateral
+        const menuToggle = document.getElementById("menu-toggle");
+        const menu = document.getElementById("side-menu");
+        menuToggle.addEventListener("change", function () {
+          menu.classList.toggle("open", this.checked);
+        });
+      };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Central de Mensagens</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      crossorigin="anonymous"
+    />
+
+    <style>
+      :root {
+        --primary: #f75c03;
+        --secondary: #ff8c42;
+        --text-light: #fff;
+        --text-dark: #333;
+        --bg-light: #f5f5f5;
+        --bg-dark: #1e1e1e;
+        --card-light: #fafafa;
+        --card-dark: #2a2a2a;
+        --border-dark: #444;
+      }
+
+      * {
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+      }
+
+      html,
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: var(--bg-light);
+        color: var(--text-dark);
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      body.dark-mode {
+        background-color: var(--bg-dark);
+        color: var(--text-light);
+      }
+
+      header {
+        background: linear-gradient(to left, #fb792e, #ffb73b);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+      }
+
+      header img {
+        height: 70px;
+        width: 80px;
+      }
+
+      .burger {
+        position: relative;
+        width: 40px;
+        height: 30px;
+        background: transparent;
+        cursor: pointer;
+        z-index: 1002;
+      }
+
+      .burger input {
+        display: none;
+      }
+
+      .burger span {
+        display: block;
+        position: absolute;
+        height: 4px;
+        width: 100%;
+        background: black;
+        border-radius: 9px;
+        opacity: 1;
+        left: 0;
+        transform: rotate(0deg);
+        transition: 0.25s ease-in-out;
+      }
+
+      .burger span:nth-of-type(1) {
+        top: 0px;
+        transform-origin: left center;
+      }
+
+      .burger span:nth-of-type(2) {
+        top: 50%;
+        transform: translateY(-50%);
+        transform-origin: left center;
+      }
+
+      .burger span:nth-of-type(3) {
+        top: 100%;
+        transform-origin: left center;
+        transform: translateY(-100%);
+      }
+
+      .burger input:checked ~ span:nth-of-type(1) {
+        transform: rotate(45deg);
+        top: 0px;
+        left: 5px;
+      }
+
+      .burger input:checked ~ span:nth-of-type(2) {
+        width: 0%;
+        opacity: 0;
+      }
+
+      .burger input:checked ~ span:nth-of-type(3) {
+        transform: rotate(-45deg);
+        top: 28px;
+        left: 5px;
+      }
+
+      .nav-menu {
+        position: fixed;
+        top: 0;
+        right: -250px;
+        width: 250px;
+        height: 100%;
+        background-color: var(--card-light);
+        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+        padding: 2rem 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        transition: right 0.3s ease;
+        z-index: 1001;
+      }
+
+      .burger input:checked ~ .nav-menu {
+        right: 0;
+      }
+
+      body.dark-mode .nav-menu {
+        background-color: var(--card-dark);
+      }
+
+      .nav-menu a {
+        text-decoration: none;
+        color: var(--text-dark);
+        font-weight: bold;
+        font-size: 1.1rem;
+      }
+
+      body.dark-mode .nav-menu a {
+        color: var(--text-light);
+      }
+
+      .dark-toggle {
+        background: white;
+        color: var(--primary);
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      body.dark-mode .dark-toggle {
+        background: #333;
+        color: white;
+      }
+
+      .main-banner {
+        background-image: linear-gradient(
+            rgba(0, 0, 0, 0.3),
+            rgba(0, 0, 0, 0.3)
+          ),
+          url(./imagens/fundocroche.jpg);
+        color: white;
+        padding: 4rem 1rem;
+        text-align: center;
+      }
+
+      .main-banner h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .main-banner p {
+        font-size: 1.4rem;
+      }
+
+      @keyframes pulse {
+        from {
+          transform: scale(1);
+        }
+        to {
+          transform: scale(1.05);
+        }
+      }
+
+      main {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 4rem 1rem;
+      }
+
+      .section-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        width: 100%;
+        max-width: 1100px;
+      }
+
+      .card {
+        background: var(--card-light);
+        text-align: center;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 2.5rem 2rem;
+        min-height: 320px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      body.dark-mode .card {
+        background: var(--card-dark);
+        border-color: var(--border-dark);
+      }
+
+      .card i {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        color: var(--primary);
+      }
+
+      .card h3 {
+        margin: 0.5rem 0;
+      }
+
+      .card p {
+        font-size: 1rem;
+        margin: 0.5rem 0 1.5rem;
+      }
+
+      .card button {
+        padding: 0.7rem 1.5rem;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background 0.3s ease;
+      }
+
+      .card button:hover {
+        background: var(--secondary);
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+      }
+
+      .card:hover i {
+        transform: scale(1.1) rotate(3deg);
+      }
+
+      .card a {
+        color: white;
+        text-decoration: none;
+      }
+
+      footer {
+        margin-top: 30px;
+        background: #eee;
+        padding: 1rem;
+        text-align: center;
+        font-size: 0.9rem;
+      }
+
+      body.dark-mode footer {
+        background: #333;
+      }
+
+      footer a {
+        margin: 0 0.5rem;
+        color: var(--primary);
+        text-decoration: none;
+      }
+
+      footer a:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 600px) {
+        .main-banner h1 {
+          font-size: 2rem;
+        }
+        .main-banner p {
+          font-size: 1rem;
+        }
+        header {
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .section-cards {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <label class="burger" for="burger">
+        <input type="checkbox" id="burger" />
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <div class="nav-menu">
+          <a href="dashboard.html">Início</a>
+          <a href="mensagens.html">Mensagens</a>
+          <a href="notific.html">Notificações</a>
+          <a href="config.html">Configurações</a>
+          <button class="dark-toggle" onclick="toggleDarkMode()">🌙</button>
+        </div>
+      </label>
+
+      <a href="dashboard.html">
+        <img src="./imagens/logofzar.png" alt="Fazendo Arte" />
+      </a>
+    </header>
+
+    <section class="main-banner">
+      <h1>Central de Mensagens</h1>
+      <p>Comunique-se de forma fácil e rápida com seus clientes!</p>
+    </section>
+
+    <main>
+      <section class="section-cards">
+        <div class="card">
+          <i class="fas fa-inbox"></i>
+          <h3>Caixa de Entrada</h3>
+          <p>
+            Acompanhe todas as mensagens recebidas e mantenha-se atualizado com
+            seus clientes.
+          </p>
+          <button><a href="caixaentrada.html">Ver Mensagens</a></button>
+        </div>
+
+        <div class="card">
+          <i class="fas fa-bell"></i>
+          <h3>Notificações</h3>
+          <p>
+            Fique por dentro de todas as atualizações e novidades da plataforma.
+          </p>
+          <button><a href="notific.html">Ver Notificações</a></button>
+        </div>
+
+        <div class="card">
+          <i class="fas fa-chart-line"></i>
+          <h3>Análise de Conversas</h3>
+          <p>Monitore seu desempenho no atendimento dos clientes.</p>
+          <button><a href="relatorio.html">Ver Análises</a></button>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        Copyright © 2025 Fazendo Arte.
+        <a href="#">Termos e condições</a> | <a href="#">Sobre nós</a> |
+        <a href="#">Contato</a>
+      </p>
+    </footer>
+
+    <script>
+      function novaMensagem() {
+        alert("Função de nova mensagem ainda não implementada.");
+      }
+
+      function toggleDarkMode() {
+        document.body.classList.toggle("dark-mode");
+        const isDark = document.body.classList.contains("dark-mode");
+        localStorage.setItem("modo-escuro", isDark ? "true" : "false");
+
+        const btn = document.querySelectorAll(".dark-toggle");
+        btn.forEach((b) => (b.innerHTML = isDark ? "☀️" : "🌙"));
+      }
+
+      window.onload = function () {
+        const isDark = localStorage.getItem("modo-escuro") === "true";
+        if (isDark) {
+          document.body.classList.add("dark-mode");
+          const btn = document.querySelectorAll(".dark-toggle");
+          btn.forEach((b) => (b.innerHTML = "☀️"));
+        }
+      };
+    </script>
+  </body>
+</html>

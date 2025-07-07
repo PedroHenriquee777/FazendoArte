@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Configurações</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    :root {
+      --primary: #f75c03;
+      --secondary: #ff8c42;
+      --text-light: #fff;
+      --text-dark: #333;
+      --bg-light: #f5f5f5;
+      --bg-dark: #1e1e1e;
+      --card-light: #fafafa;
+      --card-dark: #2a2a2a;
+      --border-dark: #444;
+    }
+
+    body {
+      background: var(--bg-light);
+      color: var(--text-dark);
+    }
+    body.dark-mode {
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+    }
+    body.dark-mode .card {
+      background: var(--card-dark);
+      border-color: var(--border-dark);
+    }
+
+    header {
+      background: linear-gradient(90deg, #ff7d3d, #ff9900);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 {
+      color: white;
+      font-size: 28px;
+    }
+    .dark-toggle {
+      background: white;
+      color: var(--primary);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    body.dark-mode .dark-toggle {
+      background: #333;
+      color: white;
+    }
+
+    .burger {
+      position: relative;
+      width: 40px;
+      height: 30px;
+      background: transparent;
+      cursor: pointer;
+      display: block;
+      z-index: 1001;
+    }
+    .burger input {
+      display: none;
+    }
+    .burger span {
+      display: block;
+      position: absolute;
+      height: 4px;
+      width: 100%;
+      background: white;
+      border-radius: 9px;
+      left: 0;
+      transition: .25s ease-in-out;
+    }
+    .burger span:nth-of-type(1) { top: 0; }
+    .burger span:nth-of-type(2) { top: 50%; transform: translateY(-50%); }
+    .burger span:nth-of-type(3) { top: 100%; transform: translateY(-100%); }
+    .burger input:checked ~ span:nth-of-type(1) {
+      transform: rotate(45deg);
+      top: 8px;
+    }
+    .burger input:checked ~ span:nth-of-type(2) {
+      opacity: 0;
+    }
+    .burger input:checked ~ span:nth-of-type(3) {
+      transform: rotate(-45deg);
+      top: 8px;
+    }
+
+    .menu {
+      position: fixed;
+      top: 0;
+      right: -250px;
+      width: 250px;
+      height: 100vh;
+      background: white;
+      box-shadow: -2px 0 8px rgba(0,0,0,0.2);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: right 0.3s ease;
+      z-index: 1000;
+    }
+    body.dark-mode .menu {
+      background: var(--bg-dark);
+    }
+    .menu.open {
+      right: 0;
+    }
+    .menu h2 {
+      color: var(--primary);
+      font-size: 20px;
+    }
+    .menu a {
+      text-decoration: none;
+      color: inherit;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .container {
+      padding: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .settings-section {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    body.dark-mode .settings-section {
+      background: var(--card-dark);
+    }
+    .settings-section h2 {
+      color: var(--primary);
+      margin-bottom: 16px;
+      font-size: 20px;
+    }
+    .settings-section label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .settings-section input, .settings-section select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 16px;
+      background: white;
+    }
+    body.dark-mode .settings-section input,
+    body.dark-mode .settings-section select {
+      background: var(--bg-dark);
+      border: 1px solid var(--border-dark);
+      color: white;
+    }
+
+    .checkbox-group label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .checkbox-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+    }
+    .store-image-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .store-image-wrapper input[type="file"] {
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+
+    .store-image-preview {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      margin: 0 auto 16px;
+    }
+
+    button {
+      background: var(--primary);
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #d94e00;
+    }
+
+    footer {
+      background: #eee;
+      padding: 1rem;
+      text-align: center;
+      font-size: 0.9rem;
+      margin-top: 40px;
+      color: #1e1e1e;
+    }
+    footer a {
+      margin: 0 0.5rem;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    @media (max-width: 767px) {
+      header h1 {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <label class="burger">
+      <input type="checkbox" id="menu-toggle" />
+      <span></span>
+      <span></span>
+      <span></span>
+    </label>
+    <h1>Configurações</h1>
+  </header>
+
+  <div class="menu" id="side-menu">
+    <h2>Menu</h2>
+    <a href="#">Dashboard</a>
+    <a href="#">Relatórios</a>
+    <a href="#">Notificações</a>
+    <a href="#">Configurações</a>
+    <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Modo Escuro</button>
+  </div>
+
+  <div class="container">
+
+    <div class="settings-section">
+      <h2>Sobre a Loja</h2>
+      <label>Logo da Loja</label>
+      <div class="store-image-wrapper">
+        <input type="file" id="fileInput" accept="image/*" onchange="previewImage(event)">
+        <img id="storeImagePreview" class="store-image-preview" src="" alt="Prévia da imagem" style="display:none;">
+      </div>
+      <label>Nome da Loja</label>
+      <input type="text" placeholder="Ex: Infor Peças">
+      <label>Endereço Comercial</label>
+      <input type="text" placeholder="Ex: Rua das Rosas, 123 - Nova Russas/CE">
+    </div>
+
+    <div class="settings-section">
+      <h2>Dados Pessoais</h2>
+      <label>Nome Completo</label>
+      <input type="text" value="Teste Nome">
+      <label>Email</label>
+      <input type="email" value="teste@gmail.com">
+      <label>Telefone</label>
+      <input type="tel" value="(11) 91234-5678">
+    </div>
+
+    <div class="settings-section">
+      <h2>Dados da Loja</h2>
+      <label>Nome da Loja</label>
+      <input type="text" value="Pipa combate">
+      <label>Descrição</label>
+      <input type="text" value="Pipas e linhas de qualidade">
+      <label>Endereço Comercial</label>
+      <input type="text" value="Rua das rosas, 123 - Nova Russas/CE">
+    </div>
+
+    <div class="settings-section">
+      <h2>Dados de Vendas</h2>
+      <label>Meta Mensal de Vendas (R$)</label>
+      <input type="number" placeholder="Ex.: 1000">
+      <label>Prazo Médio de Entrega</label>
+      <input type="text" placeholder="Ex.: 5 dias úteis">
+      <label>Formas de Pagamento Aceitas</label>
+      <input type="text" placeholder="Ex.: Pix, Cartão, Dinheiro">
+      <label>Observações</label>
+      <input type="text" placeholder="Ex.: Entregas apenas na região central">
+      <div class="checkbox-group">
+        <label>
+          <input type="checkbox">
+          <span>Permitir pedidos fora do horário comercial</span>
+        </label>
+        <label>
+          <input type="checkbox">
+          <span>Ativar controle de estoque</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h2>Dados Bancários</h2>
+      <label>Banco</label>
+      <input type="text" value="Nubank">
+      <label>Agência</label>
+      <input type="text" value="0001">
+      <label>Conta</label>
+      <input type="text" value="123456-7">
+      <label>Tipo de Conta</label>
+      <select>
+        <option selected>Corrente</option>
+        <option>Poupança</option>
+        <option>Pagamento</option>
+      </select>
+    </div>
+
+    <div class="settings-section">
+      <h2>Preferências</h2>
+      <label>Modo de Exibição</label>
+      <select>
+        <option>Padrão</option>
+        <option>Compacto</option>
+        <option>Detalhado</option>
+      </select>
+    </div>
+
+    <div class="settings-section">
+      <h2>Idioma</h2>
+      <label>Selecione o idioma</label>
+      <select>
+        <option>Português (BR)</option>
+        <option>Inglês (EN)</option>
+        <option>Espanhol (ES)</option>
+      </select>
+    </div>
+
+    <div class="settings-section">
+      <h2>Notificações</h2>
+      <div class="checkbox-group">
+        <label>
+          <input type="checkbox">
+          <span>Receber notificações por email</span>
+        </label>
+        <label>
+          <input type="checkbox">
+          <span>Notificações push no app</span>
+        </label>
+        <label>
+          <input type="checkbox">
+          <span>Notificações de promoções</span>
+        </label>
+      </div>
+    </div>
+
+    <button id="salvarcfg" type="submit">Salvar alterações</button>
+
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 Fazendo Arte.
+      <a href="#">Termos e condições</a> |
+      <a href="#">Sobre nós</a> |
+      <a href="#">Contato</a>
+    </p>
+  </footer>
+
+  <script>
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+      const isDark = document.body.classList.contains("dark-mode");
+      localStorage.setItem("modo-escuro", isDark ? "true" : "false");
+
+      document.querySelectorAll('.dark-toggle').forEach(btn => {
+        btn.innerHTML = isDark ? "☀️" : "🌙";
+      });
+    }
+
+    window.onload = function () {
+      const isDark = localStorage.getItem("modo-escuro") === "true";
+      if (isDark) {
+        document.body.classList.add("dark-mode");
+        document.querySelectorAll('.dark-toggle').forEach(btn => {
+          btn.innerHTML = "☀️";
+        });
+      }
+    };
+
+    const menuToggle = document.getElementById('menu-toggle');
+    const menu = document.getElementById('side-menu');
+
+    menuToggle.addEventListener('change', function() {
+      if (this.checked) {
+        menu.classList.add('open');
+      } else {
+        menu.classList.remove('open');
+      }
+    });
+
+        function previewImage(event) {
+      const preview = document.getElementById('storeImagePreview');
+      const fileInput = document.getElementById('fileInput');
+      const file = event.target.files[0];
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+          fileInput.style.display = 'none'; // Oculta o botão "Escolher arquivo"
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+    
+      </script>
+
+</body>
+</html>

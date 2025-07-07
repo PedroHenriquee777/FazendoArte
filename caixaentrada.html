@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Caixa de Entrada - Chat Vendedor/Comprador</title>
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    :root {
+      --primary: #f75c03;
+      --secondary: #ff8c42;
+      --text-light: #fff;
+      --text-dark: #333;
+      --bg-light: #f5f5f5;
+      --bg-dark: #1e1e1e;
+      --card-light: #fafafa;
+      --card-dark: #2a2a2a;
+      --border-dark: #444;
+    }
+
+    body {
+      background: var(--bg-light);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    body.dark-mode {
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+    }
+
+    header {
+      background: linear-gradient(90deg, #ff7d3d, #ff9900);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: white;
+      position: relative;
+      z-index: 1100;
+    }
+
+    header h1 {
+      font-size: 28px;
+      flex: 1;
+      text-align: center;
+      user-select: none;
+    }
+
+    .burger {
+      position: relative;
+      width: 40px;
+      height: 30px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 1200;
+    }
+
+    .burger span {
+      display: block;
+      height: 4px;
+      background: white;
+      border-radius: 9px;
+      transition: 0.3s ease-in-out;
+      width: 100%;
+    }
+
+    input#menu-toggle {
+      display: none;
+    }
+
+    .menu {
+      color: black;
+      position: fixed;
+      top: 0; 
+      right: 0;
+      width: 250px;
+      height: 100vh;
+      background: var(--card-light);
+      box-shadow: -2px 0 8px rgba(0,0,0,0.2);
+      padding: 40px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transform: translateX(260px);
+      transition: transform 0.3s ease;
+      z-index: 1050;
+    }
+    body.dark-mode .menu {
+      background: var(--card-dark);
+      color: var(--text-light);
+    }
+
+    input#menu-toggle:checked + .menu {
+      transform: translateX(0);
+    }
+
+    input#menu-toggle:checked + .menu + .burger span:nth-child(1) {
+      transform: rotate(45deg);
+      position: relative;
+      top: 10px;
+    }
+    input#menu-toggle:checked + .menu + .burger span:nth-child(2) {
+      opacity: 0;
+    }
+    input#menu-toggle:checked + .menu + .burger span:nth-child(3) {
+      transform: rotate(-45deg);
+      position: relative;
+      top: -10px;
+    }
+
+    .menu h2 {
+      color: var(--primary);
+      font-size: 20px;
+      margin-bottom: 12px;
+      user-select: none;
+    }
+
+    .menu a {
+      text-decoration: none;
+      color: inherit;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+      font-weight: 600;
+      transition: color 0.3s, border-color 0.3s;
+    }
+    body.dark-mode .menu a {
+      border-color: #555;
+    }
+    .menu a:hover {
+      color: var(--primary);
+    }
+    body.dark-mode .menu a:hover {
+      color: var(--secondary);
+    }
+
+    .dark-toggle {
+      width: 200px;
+      background: var(--primary);
+      color: var(--text-light);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10%;
+      align-self: flex-start;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    body.dark-mode .dark-toggle {
+      background: var(--secondary);
+      color: var(--text-dark);
+    }
+    .dark-toggle:hover {
+      background: var(--secondary);
+      color: var(--text-dark);
+    }
+    body.dark-mode .dark-toggle:hover {
+      background: var(--primary);
+      color: var(--text-light);
+    }
+
+    .container {
+      margin-top: 40px;
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 64px);
+      overflow: hidden;
+    }
+
+    .user-list {
+      width: 280px;
+      background: var(--card-light);
+      border-right: 1px solid #ddd;
+      overflow-y: auto;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    body.dark-mode .user-list {
+      background: var(--card-dark);
+      border-color: var(--border-dark);
+    }
+
+    .user-list h2 {
+      padding: 1rem;
+      border-bottom: 1px solid #ddd;
+      color: var(--primary);
+      font-weight: 700;
+      user-select: none;
+    }
+    body.dark-mode .user-list h2 {
+      border-color: var(--border-dark);
+    }
+
+    .user {
+      padding: 1rem;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background-color 0.2s;
+    }
+    body.dark-mode .user {
+      border-color: #555;
+    }
+    .user:hover, .user.active {
+      background: var(--secondary);
+      color: var(--text-light);
+    }
+
+    .user .role {
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+
+    .chat-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--card-light);
+      transition: background-color 0.3s, color 0.3s;
+    }
+    body.dark-mode .chat-area {
+      background: var(--card-dark);
+      color: var(--text-light);
+    }
+
+    .chat-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #ddd;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      user-select: none;
+    }
+    body.dark-mode .chat-header {
+      border-color: var(--border-dark);
+    }
+
+    .messages {
+      flex: 1;
+      padding: 1rem 1.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: var(--bg-light);
+      transition: background-color 0.3s;
+    }
+    body.dark-mode .messages {
+      background: #222;
+    }
+
+    .message {
+      max-width: 70%;
+      padding: 0.7rem 1rem;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      line-height: 1.3;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      word-wrap: break-word;
+    }
+
+    .message.from-me {
+      background: var(--primary);
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 0;
+    }
+
+    .message.from-them {
+      background: var(--secondary);
+      color: white;
+      align-self: flex-start;
+      border-bottom-left-radius: 0;
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 0.8rem 1rem;
+      border-top: 1px solid #ddd;
+      background: var(--card-light);
+    }
+    body.dark-mode .chat-input {
+      border-color: var(--border-dark);
+      background: var(--card-dark);
+    }
+
+    .chat-input textarea {
+      flex: 1;
+      resize: none;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+      padding: 0.7rem 1rem;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.3s;
+    }
+    .chat-input textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    body.dark-mode .chat-input textarea {
+      background: #333;
+      color: var(--text-light);
+      border-color: #555;
+    }
+
+    .chat-input button {
+      background: var(--primary);
+      border: none;
+      color: white;
+      padding: 0 1.2rem;
+      margin-left: 8px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    .chat-input button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    .chat-input button:hover:not(:disabled) {
+      background: var(--secondary);
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: rgba(0,0,0,0.2);
+      border-radius: 10px;
+    }
+    body.dark-mode ::-webkit-scrollbar-thumb {
+      background-color: rgba(255,255,255,0.3);
+    }
+
+    @media(max-width: 768px) {
+      .container {
+        flex-direction: column;
+        height: auto;
+      }
+      .user-list {
+        width: 100%;
+        max-height: 200px;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+        overflow-x: auto;
+        display: flex;
+        gap: 12px;
+      }
+      .user {
+        flex: 1;
+        border-bottom: none;
+        border-right: 1px solid #eee;
+        justify-content: center;
+      }
+      body.dark-mode .user-list {
+        border-color: var(--border-dark);
+      }
+    }
+
+    footer {
+      background: #eee;
+      padding: 1rem;
+      text-align: center;
+      font-size: 0.9rem;
+      margin-top: 40px;
+      color: #1e1e1e;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.dark-mode footer {
+      background: #222;
+      color: var(--text-light);
+    }
+
+    footer a {
+      margin: 0 0.5rem;
+      color: #f75c03;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    body.dark-mode footer a {
+      color: var(--link-dark);
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <input type="checkbox" id="menu-toggle" />
+    <nav class="menu">
+      <h2>Menu</h2>
+      <a href="dashboard.html">Início</a>
+      <a href="mensagens.html">Mensagens</a>
+      <a href="config.html">Configurações</a>
+      <button class="dark-toggle" onclick="toggleDarkMode()">🌙</button>
+    </nav>
+    <label for="menu-toggle" class="burger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </label>
+    <h1>Caixa de Entrada</h1>
+  </header>
+
+  <div class="container">
+    <aside class="user-list" id="user-list">
+      <h2>Mensagens</h2>
+
+    </aside>
+
+    <section class="chat-area">
+      <div class="chat-header" id="chat-header">Selecione um usuário</div>
+      <div class="messages" id="messages"></div>
+      <form class="chat-input" id="chat-form" onsubmit="return enviarMensagem(event)">
+        <textarea id="message-input" rows="2" placeholder="Digite sua mensagem..." disabled></textarea>
+        <button type="submit" disabled>Enviar</button>
+      </form>
+    </section>
+  </div>
+
+    <footer>
+      <p>
+          Copyright © 2025 Fazendo Arte.
+          <a href="#">Termos e condições</a> |
+          <a href="#">Sobre nós</a> |
+          <a href="#">Contato</a>
+      </p>
+    </footer>
+
+  <script>
+    const users = [
+  { id: 1, name: 'Comprador João', role: 'Comprador' },
+  { id: 2, name: 'Compradora Maria', role: 'Compradora' },
+  { id: 3, name: 'Comprador José', role: 'Comprador' },
+  { id: 4, name: 'Comprador Carlos', role: 'Comprador' },
+  { id: 5, name: 'Compradora Ana', role: 'Compradora'},
+  { id: 6, name: 'Compradora Luiza', role: 'Compradora' },
+  { id: 7, name: 'Comprador Jorge', role: 'Comprador' },
+  { id: 8, name: 'Compradora Antonia', role: 'Compradora' },
+  { id: 9, name: 'Compradora Julia', role: 'Compradora' },
+  { id: 10, name: 'Comprador Miguel', role: 'Comprador'},
+  { id: 11, name: 'Compradora Jaqueline', role: 'Compradora'},
+  { id: 12, name: 'Compradora Amélia', role: 'Compradora'}
+];
+
+let selectedUserId = null;
+
+const userListEl = document.getElementById('user-list');
+const chatHeaderEl = document.getElementById('chat-header');
+const messagesEl = document.getElementById('messages');
+const messageInput = document.getElementById('message-input');
+const chatForm = document.getElementById('chat-form');
+
+const respostas = {
+  1: 'Olá! Gostaria de pedir que adiantasse meu pedido.',
+  2: 'Oi, meu pedido veio com defeito, como podemos resolver isso?',
+  3: 'Opa, queria saber mais sobre as específicações do seu crochê bordado',
+  4: 'Oii, não estou conseguindo rastrear meu pacote...',
+  5: 'Olá, adiante meu pedido por favor, é para presente!!',
+  6: 'Oi Oi, seus produtos tem prazo de garantia?',
+  7: 'E aí, queria saber se teria como você embalar bem meu pedido',
+  8: 'Opa, faz dias que meu pedido não tem atualizações de entrega...',
+  9: 'Minha encomenda não foi entregue, tome as medidas cabíveis ',
+  10: 'Olá! Adorei seus bordados, com certeza comprarei mais!!!',
+  11: 'OI QUERIDO ADOREI SUAS PEÇAS DE ROUPA FEITAS DE CROCHÊ BJS',
+  12: 'Oi. Que tipo de linha você usou para fazer a da minhaa encomenda????'
+};
+
+function renderUsers() {
+  users.forEach(user => {
+    const div = document.createElement('div');
+    div.classList.add('user');
+    div.dataset.userId = user.id;
+    div.innerHTML = `<span>${user.name}</span><span class="role">${user.role}</span>`;
+    div.onclick = () => selectUser(user.id);
+    userListEl.appendChild(div);
+  });
+}
+
+function selectUser(userId) {
+  selectedUserId = userId;
+
+  document.querySelectorAll('.user').forEach(el => {
+    el.classList.toggle('active', parseInt(el.dataset.userId) === userId);
+  });
+
+  const user = users.find(u => u.id === userId);
+  chatHeaderEl.textContent = `Chat com ${user.name}`;
+
+  messageInput.disabled = false;
+  chatForm.querySelector('button').disabled = false;
+
+  messagesEl.innerHTML = '';
+
+  setTimeout(() => {
+    const resposta = document.createElement('div');
+    resposta.classList.add('message', 'from-them');
+    resposta.textContent = respostas[userId] || `Olá ${user.name}`;
+    messagesEl.appendChild(resposta);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }, 500);
+}
+
+function enviarMensagem(event) {
+  event.preventDefault();
+  const texto = messageInput.value.trim();
+  if (!texto || selectedUserId === null) return;
+
+  const div = document.createElement('div');
+  div.classList.add('message', 'from-me');
+  div.textContent = texto;
+
+  messagesEl.appendChild(div);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+
+  messageInput.value = '';
+  messageInput.focus();
+}
+
+function toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+}
+
+renderUsers();
+
+document.querySelectorAll('.menu a, .menu button').forEach(el => {
+  el.addEventListener('click', () => {
+    document.getElementById('menu-toggle').checked = false;
+  });
+});
+
+  </script>
+</body>
+</html>

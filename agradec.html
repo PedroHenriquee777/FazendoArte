@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cadastro Concluído</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #f75c03;
+      --secondary: #ff8c42;
+      --text-light: #fff;
+      --text-dark: #333;
+      --bg-light: #f5f5f5;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: var(--bg-light);
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 32px;
+      color: var(--primary);
+      margin-bottom: 16px;
+    }
+
+    p {
+      font-size: 18px;
+      max-width: 500px;
+      margin-bottom: 32px;
+    }
+
+    .btn {
+      padding: 14px 32px;
+      font-size: 16px;
+      font-weight: 600;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #e14d00;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 16px;
+      font-size: 14px;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Cadastro concluído com sucesso! 🎉</h1>
+  <p>Agora você já pode acessar sua conta de vendedor e começar a gerenciar suas vendas.</p>
+
+  <button class="btn" onclick="location.href='dashboard.html'">Começar a vender</button>
+
+
+</body>
+</html>

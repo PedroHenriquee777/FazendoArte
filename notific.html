@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Notificações</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    :root {
+      --primary: #f75c03;
+      --secondary: #ff8c42;
+      --text-light: #fff;
+      --text-dark: #333;
+      --bg-light: #f5f5f5;
+      --bg-dark: #1e1e1e;
+      --card-light: #fafafa;
+      --card-dark: #2a2a2a;
+      --border-dark: #444;
+    }
+
+    body {
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    body.dark-mode {
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+    }
+
+    body.dark-mode .card {
+      background: var(--card-dark);
+      border-color: var(--border-dark);
+    }
+
+    header {
+      background: linear-gradient(90deg, #ff7d3d, #ff9900);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header h1 {
+      color: white;
+      font-size: 28px;
+    }
+
+    .dark-toggle {
+      background: white;
+      color: var(--primary);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    body.dark-mode .dark-toggle {
+      background: #333;
+      color: white;
+    }
+
+    .burger {
+      position: relative;
+      width: 40px;
+      height: 30px;
+      background: transparent;
+      cursor: pointer;
+      display: block;
+      z-index: 1001;
+    }
+
+    .burger input {
+      display: none;
+    }
+
+    .burger span {
+      display: block;
+      position: absolute;
+      height: 4px;
+      width: 100%;
+      background: white;
+      border-radius: 9px;
+      left: 0;
+      transform: rotate(0deg);
+      transition: .25s ease-in-out;
+    }
+
+    .burger span:nth-of-type(1) {
+      top: 0;
+    }
+
+    .burger span:nth-of-type(2) {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .burger span:nth-of-type(3) {
+      top: 100%;
+      transform: translateY(-100%);
+    }
+
+    .burger input:checked ~ span:nth-of-type(1) {
+      transform: rotate(45deg);
+      top: 8px;
+    }
+
+    .burger input:checked ~ span:nth-of-type(2) {
+      opacity: 0;
+    }
+
+    .burger input:checked ~ span:nth-of-type(3) {
+      transform: rotate(-45deg);
+      top: 8px;
+    }
+
+    .menu {
+      position: fixed;
+      top: 0;
+      right: -250px;
+      width: 250px;
+      height: 100vh;
+      background: white;
+      box-shadow: -2px 0 8px rgba(0,0,0,0.2);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: right 0.3s ease;
+      z-index: 1000;
+    }
+
+    body.dark-mode .menu {
+      background: var(--bg-dark);
+    }
+
+    .menu.open {
+      right: 0;
+    }
+
+    .menu h2 {
+      color: var(--primary);
+      font-size: 20px;
+    }
+
+    .menu a {
+      text-decoration: none;
+      color: inherit;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .container {
+      padding: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .notifications-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .notification {
+      background: white;
+      border-radius: 12px;
+      padding: 20px 24px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      border-left: 6px solid var(--primary);
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    body.dark-mode .notification {
+      background: var(--card-dark);
+      border-color: var(--primary);
+    }
+
+    .notification.unread {
+      background-color: #fffae6;
+      border-left-color: #f75c03;
+      font-weight: 600;
+    }
+
+    body.dark-mode .notification.unread {
+      background-color: #3a2b00;
+    }
+
+    .notification:hover {
+      background-color: #f5f5f5;
+    }
+
+    body.dark-mode .notification:hover {
+      background-color: #444;
+    }
+
+    .notification-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .notification-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .notification-date {
+      font-size: 12px;
+      color: #888;
+    }
+
+    body.dark-mode .notification-date {
+      color: #bbb;
+    }
+
+    .notification-message {
+      font-size: 14px;
+      color: #555;
+    }
+
+    body.dark-mode .notification-message {
+      color: #ddd;
+    }
+
+    footer {
+      background: #eee;
+      padding: 1rem;
+      text-align: center;
+      font-size: 0.9rem;
+      margin-top: 10%;
+      color: #1e1e1e;
+    }
+
+    footer a {
+      margin: 0 0.5rem;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 767px) {
+      .notification {
+        padding: 16px 18px;
+      }
+      header h1 {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <label class="burger">
+      <input type="checkbox" id="menu-toggle" />
+      <span></span>
+      <span></span>
+      <span></span>
+    </label>
+    <h1>Notificações</h1>
+  </header>
+
+  <div class="menu" id="side-menu">
+    <h2>Menu</h2>
+    <a href="dashboard.html">Início</a>
+    <a href="mensagens.html">Mensagens</a>
+    <a href="config.html">Configurações</a>
+    <button class="dark-toggle" onclick="toggleDarkMode()">🌙</button>
+  </div>
+
+  <div class="container">
+
+    <div class="notifications-list">
+
+      <div class="notification unread" tabindex="0">
+        <div class="notification-header">
+          <div class="notification-title">Nova mensagem de Cliente Josefina</div>
+          <div class="notification-date">05/06/2025 14:30</div>
+        </div>
+        <div class="notification-message">Você recebeu uma nova mensagem referente ao pedido #1234.</div>
+      </div>
+
+      <div class="notification" tabindex="0">
+        <div class="notification-header">
+          <div class="notification-title">Atualização do sistema</div>
+          <div class="notification-date">04/06/2025 10:00</div>
+        </div>
+        <div class="notification-message">O sistema passou por uma manutenção programada e está funcionando normalmente.</div>
+      </div>
+
+      <div class="notification unread" tabindex="0">
+        <div class="notification-header">
+          <div class="notification-title">Alerta de segurança</div>
+          <div class="notification-date">03/06/2025 18:45</div>
+        </div>
+        <div class="notification-message">Detectamos uma tentativa de login suspeita na sua conta.</div>
+      </div>
+
+      <div class="notification" tabindex="0">
+        <div class="notification-header">
+          <div class="notification-title">Novo relatório disponível</div>
+          <div class="notification-date">02/06/2025 09:15</div>
+        </div>
+        <div class="notification-message">O relatório mensal de desempenho está disponível para download.</div>
+      </div>
+
+      <div class="notification" tabindex="0">
+        <div class="notification-header">
+          <div class="notification-title">Nova mensagem de Cliente Ronaldo</div>
+          <div class="notification-date">01/06/2025 13:40</div>
+        </div>
+        <div class="notification-message">Você recebeu uma nova mensagem referente ao pedido #2346.</div>
+      </div>
+
+      <div class="notification" tabindex="0">
+        <div class="notification-header">
+          <div class="notification-title">Nova mensagem de Cliente Cristiano Ronaldo</div>
+          <div class="notification-date">31/05/2025 16:13</div>
+        </div>
+        <div class="notification-message">Você recebeu uma nova mensagem referente ao pedido #1024.</div>
+      </div>
+
+      <div class="notification unread" tabindex="0">
+        <div class="notification-header">
+          <div class="notification-title">Você fez login em Nokia XR21?</div>
+          <div class="notification-date">30/05/2025 07:45</div>
+        </div>
+        <div class="notification-message">Sua conta foi acessada nesse dispositivo, se não foi você entre em contato.</div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <footer>
+    <p>
+      Copyright © 2025 Fazendo Arte.
+      <a href="#">Termos e condições</a> |
+      <a href="#">Sobre nós</a> |
+      <a href="#">Contato</a>
+    </p>
+  </footer>
+
+  <script>
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+      const isDark = document.body.classList.contains("dark-mode");
+      localStorage.setItem("modo-escuro", isDark ? "true" : "false");
+
+      document.querySelectorAll('.dark-toggle').forEach(btn => {
+        btn.innerHTML = isDark ? "☀️" : "🌙";
+      });
+    }
+
+    window.onload = function () {
+      const isDark = localStorage.getItem("modo-escuro") === "true";
+      if (isDark) {
+        document.body.classList.add("dark-mode");
+        document.querySelectorAll('.dark-toggle').forEach(btn => {
+          btn.innerHTML = "☀️";
+        });
+      }
+    };
+
+    const menuToggle = document.getElementById('menu-toggle');
+    const menu = document.getElementById('side-menu');
+
+    menuToggle.addEventListener('change', function() {
+      if (this.checked) {
+        menu.classList.add('open');
+      } else {
+        menu.classList.remove('open');
+      }
+    });
+  </script>
+
+</body>
+</html>

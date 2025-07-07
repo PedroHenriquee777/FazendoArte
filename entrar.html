@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Entrar como Vendedor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #f75c03;
+      --secondary: #ff8c42;
+      --text-light: #fff;
+      --text-dark: #333;
+      --bg-light: #f5f5f5;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: var(--bg-light);
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 32px;
+      color: var(--primary);
+      margin-bottom: 16px;
+    }
+
+    p {
+      font-size: 18px;
+      max-width: 500px;
+      margin-bottom: 32px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .btn-cadastro {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-login {
+      background: white;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+  
+  </style>
+</head>
+<body>
+
+  <h1>Bem-vindo, Vendedor!</h1>
+  <p>Gerencie sua loja, acompanhe pedidos e expanda seu negócio de forma simples e rápida.</p>
+
+  <div class="button-group">
+    <button class="btn btn-cadastro" onclick="location.href='conta.html'">Cadastrar-se</button>
+    <button class="btn btn-login" onclick="location.href='login.html'">Fazer Login</button>
+  </div>
+
+</body>
+</html>
