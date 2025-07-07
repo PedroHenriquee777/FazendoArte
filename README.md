@@ -34,6 +34,7 @@ We believe in the value of handcrafted work and in generating income through art
 - Shopping cart and checkout system
 - Order tracking and communication between buyer and seller
 - Put the code in English for good practice
+- Remove inline CSS and JavaScript codes from HTML files
 
 ## 🏗️ Project Structure
 
