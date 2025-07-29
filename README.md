@@ -92,4 +92,4 @@ Marketplace developed by students of the **Startup Management** course.
 
 ## 📄 License
 
-This project is for educational purposes only and licensed under the [MIT License].
+This project was developed solely for educational, academic, and technical purposes, with no intention of commercial use or sale
